@@ -1,39 +1,47 @@
-import { Model, Sequelize } from 'sequelize';
 import bcrypt from 'bcryptjs';
+import 'database';
 
-class User extends Model {
-  static init(sequelize) {
-    super.init(
-      {
-        name: Sequelize.STRING,
-        email: Sequelize.STRING,
-        password: Sequelize.VIRTUAL,
-        password_hash: Sequelize.STRING,
-        provider: Sequelize.BOOLEAN,
-      },
-      {
-        sequelize,
-      }
-    );
-    this.addHook('beforeSave', async user => {
-      if (user.password) {
-        user.password_hash = await bcrypt.hash(user.password, 8);
-      }
-    });
-
-    return this;
+const UserSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    require: true,
+  },
+  email: {
+    type: String,
+    unique: true,
+    required: true,
+    lowercase: true,
+  },
+  password: {
+    type: String,
+    required: true,
+    select: false,
+  },
+  passwordResetToken: {
+    type: String,
+    select: false,
+  },
+  passwordResetExpires: {
+    type: Date,
+    select: false,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+  updatedAt: {
+    type: Date,
+    default: Date.now,
   }
+});
 
-  static associate(models) {
-    this.belongsTo(models.File, {
-      foreignKey: 'avatar_id',
-      as: 'avatar',
-    });
-  }
+UserSchema.pre('save', async function(next) {
+  const hash = await bcrypt.hash(this.password, 10);
+  this.password = hash;
 
-  checkPassword(password) {
-    return bcrypt.compare(password, this.password_hash);
-  }
-}
+  next();
+});
+
+const User = mongoose.model('User', UserSchema);
 
 export default User;
