@@ -1,5 +1,12 @@
 {
+  "name": "boilerplate-nodejs",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/viniciusfonn/boilerplate-mongo.git",
+  "author": "vinicius fonseca <viniciusfon96@gmail.com>",
+  "license": "MIT",
   "dependencies": {
+    "mongoose": "^5.7.7",
     "bcryptjs": "^2.4.3",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
@@ -21,3 +28,4 @@
     "sucrase": "^3.10.1"
   }
 }
+
