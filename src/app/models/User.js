@@ -1,8 +1,7 @@
 import bcrypt from 'bcryptjs';
 // import 'database';
 
-import {mongoose} from '../../database';
-
+import { mongoose } from '../../database';
 
 const UserSchema = new mongoose.Schema({
   name: {
@@ -35,10 +34,10 @@ const UserSchema = new mongoose.Schema({
   updatedAt: {
     type: Date,
     default: Date.now,
-  }
+  },
 });
 
-UserSchema.pre('save', async function(next) {
+UserSchema.pre('save', async next => {
   const hash = await bcrypt.hash(this.password, 10);
   this.password = hash;
 
