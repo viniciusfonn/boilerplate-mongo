@@ -3,13 +3,13 @@ import { Router } from 'express';
 // import authMiddleware from './app/middlewares/auth';
 import UserController from '../app/controllers/UserController';
 
-const routes = new Router();
+const users = new Router();
 
-routes.get('/', UserController.index);
-routes.post('/', UserController.store);
+users.get('/', UserController.index);
+users.post('/', UserController.store);
 
-routes.get('/:id', UserController.show);
-routes.put('/:id', UserController.update);
-routes.delete('/:id', UserController.delete);
+users.get('/:id', UserController.show);
+users.put('/:id', UserController.update);
+users.delete('/:id', UserController.delete);
 
-export default routes;
+export default users;

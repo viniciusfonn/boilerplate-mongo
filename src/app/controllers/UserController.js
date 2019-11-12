@@ -8,8 +8,6 @@ class UserController {
 
       if (!users) return res.status(400).send({ error: 'No users found' });
 
-      // users.password = undefined;
-
       return res.send({
         users,
       });
@@ -20,12 +18,11 @@ class UserController {
 
   async show(req, res) {
     const { id } = req.params;
+
     try {
-      const user = await User.findOne(id);
+      const user = await User.findOne({ _id: id });
 
       if (!user) return res.status(400).send({ error: 'User not found' });
-
-      // users.password = undefined;
 
       return res.send({
         user,
@@ -37,14 +34,13 @@ class UserController {
 
   async store(req, res) {
     const { email } = req.body;
-
     try {
       if (await User.findOne({ email }))
         return res.status(400).send({ error: 'User already exists' });
 
       const user = await User.create(req.body);
 
-      // user.password = undefined;
+      user.password = undefined;
 
       return res.send({
         user,
@@ -58,12 +54,10 @@ class UserController {
     const { id } = req.params;
 
     try {
-      if (await User.find(id))
+      if (await User.findOne({ id }))
         return res.status(400).send({ error: 'User not found' });
 
-      const user = await User.findOneAndUpdate(id, req.body);
-
-      user.password = undefined;
+      const user = await User.findByIdAndUpdate(id, req.body, { new: true });
 
       return res.send({
         user,
@@ -77,10 +71,10 @@ class UserController {
     const { id } = req.params;
 
     try {
-      if (await User.find(id))
+      if (await User.findOne({ id }))
         return res.status(400).send({ error: 'User not found' });
 
-      await User.findOneAndRemove(id);
+      await User.findOneAndRemove({ id });
 
       return res.status(200).send({ msg: 'Success' });
     } catch (error) {
