@@ -1,14 +1,15 @@
+import Project from '../models/Project';
 import User from '../models/User';
 
-class UserController {
+class ProjectController {
   async index(req, res) {
     try {
-      const users = await User.find();
+      const projects = await Project.find().populate(['user', 'tasks']);
 
-      if (!users) return res.status(400).send({ error: 'No users found' });
+      if (!projects) return res.status(400).send({ error: 'No projects found' });
 
       return res.send({
-        users,
+        projects,
       });
     } catch (error) {
       return res.status(400).send({ error: 'Query failed' });
@@ -32,20 +33,21 @@ class UserController {
   }
 
   async store(req, res) {
-    const { email } = req.body;
+    const { title, description } = req.body;
     try {
-      if (await User.findOne({ email }))
-        return res.status(400).send({ error: 'User already exists' });
+      if (await User.findOne({ title }))
+        return res.status(400).send({ error: 'This project already exists' });
 
-      const user = await User.create(req.body);
+      const project = await Project.create({title, description, user:req.userId});
+    //   await project.save();
 
-      user.password = undefined;
+    //   user.password = undefined;
 
       return res.send({
-        user,
+        project,
       });
     } catch (error) {
-      return res.status(400).send({ error: 'Insert failed' });
+      return res.status(400).send({ error: 'Fail to create project' });
     }
   }
 
@@ -82,4 +84,4 @@ class UserController {
   }
 }
 
-export default new UserController();
+export default new ProjectController();
