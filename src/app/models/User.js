@@ -45,4 +45,4 @@ UserSchema.pre('save', async function hashPass(next) {
 
 const User = mongoose.model('User', UserSchema);
 
-export default User;
+export { User as default, UserSchema };

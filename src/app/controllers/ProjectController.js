@@ -6,7 +6,8 @@ class ProjectController {
     try {
       const projects = await Project.find().populate(['user', 'tasks']);
 
-      if (!projects) return res.status(400).send({ error: 'No projects found' });
+      if (!projects)
+        return res.status(400).send({ error: 'No projects found' });
 
       return res.send({
         projects,
@@ -20,12 +21,12 @@ class ProjectController {
     const { id } = req.params;
 
     try {
-      const user = await User.findOne({ _id: id });
+      const project = await Project.findOne({ _id: id }).populate(['user']);
 
-      if (!user) return res.status(400).send({ error: 'User not found' });
+      if (!project) return res.status(400).send({ error: 'Project not found' });
 
       return res.send({
-        user,
+        project,
       });
     } catch (error) {
       return res.status(400).send({ error: 'Query failed' });
@@ -33,15 +34,23 @@ class ProjectController {
   }
 
   async store(req, res) {
-    const { title, description } = req.body;
+    const { title, description, userId } = req.body;
     try {
-      if (await User.findOne({ title }))
+      if (await Project.findOne({ title }))
         return res.status(400).send({ error: 'This project already exists' });
 
-      const project = await Project.create({title, description, user:req.userId});
-    //   await project.save();
+      const userData = await User.findById(userId);
+      if (!userData) return res.status(400).send({ error: 'User not found' });
 
-    //   user.password = undefined;
+      const project = await Project.create({
+        title,
+        description,
+        user: userData,
+      });
+
+      await project.save();
+
+      //   user.password = undefined;
 
       return res.send({
         project,
