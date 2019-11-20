@@ -73,7 +73,7 @@ class UserController {
       if (await User.findOne({ id }))
         return res.status(400).send({ error: 'User not found' });
 
-      await User.findOneAndRemove({ id });
+      await User.findByIdAndDelete(id);
 
       return res.status(200).send({ msg: 'Success' });
     } catch (error) {

@@ -4,7 +4,7 @@ import User from '../models/User';
 class ProjectController {
   async index(req, res) {
     try {
-      const projects = await Project.find().populate(['user', 'tasks']);
+      const projects = await Project.find().populate(['user']);
 
       if (!projects)
         return res.status(400).send({ error: 'No projects found' });
@@ -48,10 +48,7 @@ class ProjectController {
         user: userData,
       });
 
-      await project.save();
-
-      //   user.password = undefined;
-
+      // await project.save();
       return res.send({
         project,
       });
@@ -64,16 +61,18 @@ class ProjectController {
     const { id } = req.params;
 
     try {
-      if (await User.findOne({ id }))
-        return res.status(400).send({ error: 'User not found' });
+      if (await Project.findOne({ id }))
+        return res.status(400).send({ error: 'Project not found' });
 
-      const user = await User.findByIdAndUpdate(id, req.body, { new: true });
+      const project = await Project.findByIdAndUpdate(id, req.body, {
+        new: true,
+      }).populate(['user']);
 
       return res.send({
-        user,
+        project,
       });
     } catch (error) {
-      return res.status(400).send({ error: 'Registration failed' });
+      return res.status(400).send({ error: 'Update failed' });
     }
   }
 
@@ -81,10 +80,10 @@ class ProjectController {
     const { id } = req.params;
 
     try {
-      if (await User.findOne({ id }))
-        return res.status(400).send({ error: 'User not found' });
+      if (await Project.findOne({ id }))
+        return res.status(400).send({ error: 'Project not found' });
 
-      await User.findOneAndRemove({ id });
+      await Project.findByIdAndDelete(id);
 
       return res.status(200).send({ msg: 'Success' });
     } catch (error) {

@@ -1,7 +1,12 @@
 import { mongoose } from '../../database';
+import { ProjectSchema } from './Project';
 
 const TaskSchema = new mongoose.Schema({
   title: {
+    type: String,
+    require: true,
+  },
+  description: {
     type: String,
     require: true,
   },
@@ -19,15 +24,16 @@ const TaskSchema = new mongoose.Schema({
     type: String,
   },
   status: {
-    type: Boolean,
+    type: String,
     require: true,
-    default: false,
   },
   createdAt: {
     type: Date,
     default: Date.now,
   },
 });
+
+mongoose.model('Project', ProjectSchema);
 
 const Task = mongoose.model('Task', TaskSchema);
 

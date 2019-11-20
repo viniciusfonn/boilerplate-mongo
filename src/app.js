@@ -1,7 +1,7 @@
 import express from 'express';
-import routes from './routes';
 import users from './routes/user';
 import projects from './routes/project';
+import tasks from './routes/task';
 
 import './database';
 
@@ -17,9 +17,9 @@ class App {
   }
 
   routes() {
-    this.server.use(routes);
     this.server.use('/users', users);
     this.server.use('/projects', projects);
+    this.server.use('/tasks', tasks);
   }
 }
 
