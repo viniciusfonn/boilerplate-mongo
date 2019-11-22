@@ -1,14 +1,27 @@
 import User from '../models/User';
 
 class UserController {
-  async index(req, res) {
-    try {
-      const users = await User.find();
 
-      if (!users) return res.status(400).send({ error: 'No users found' });
+  async index(req, res) {
+      const {filter, infoFilter} = req.body;
+
+      console.log(filter, infoFilter);
+    
+    try {
+
+      if (filter == 'name') {
+        const user = await User.findOne({ name: infoFilter});
+        if (!user) return res.status(400).send({ error: 'No user found' });
+      }
+
+      else {
+        const user = await User.find();
+        if (!user) return res.status(400).send({ error: 'No users found' });
+      }
+      
 
       return res.send({
-        users,
+        user,
       });
     } catch (error) {
       return res.status(400).send({ error: 'Query failed' });
