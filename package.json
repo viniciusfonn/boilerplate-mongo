@@ -6,7 +6,7 @@
   "author": "vinicius fonseca <viniciusfon96@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "mongoose": "^5.7.7",
+    "mongoose": "^5.13.20",
     "bcryptjs": "^2.4.3",
     "express": "^4.17.1",
     "jsonwebtoken": "^9.0.0",
